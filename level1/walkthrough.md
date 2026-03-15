@@ -122,7 +122,7 @@ We get:
 Segmentation fault (core dumped)
 ```
 
-That's expected.  x86 is little endian that has the Least Significant Bit (LSB) is at the end of the value, as opposed to big endian that has the Most Significant Bit (MSB) at the end of the value.  For us, this just means we have to write address bytes (**not bits, not nibbles, bytes**) in reverse order (e.g. `0x01234567` should be written `0x67452301`).  Now we generate the correct payload:
+That's expected.  x86 is little endian that has the Least Significant Byte (LSB) is at the end of the value, as opposed to big endian that has the Most Significant Byte (MSB) at the end of the value.  For us, this just means we have to write address bytes (**not bits, not nibbles, bytes**) in reverse order (e.g. `0x01234567` should be written `0x67452301`).  Now we generate the correct payload:
 
 ```
 perl -e 'print "\xff" x 76, "\x44\x84\x04\x08"' > /tmp/1
