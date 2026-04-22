@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-main() {
-    command -V ssh scp sshpass make >/dev/null || return
-
+build_level() {
     level="$1"
 
     case "${level}" in
@@ -41,6 +39,19 @@ main() {
     make -C "${level}" || return
 
     sshpass "${sshpass_input_type}" "${sshpass_input}" scp "${level}/payload.bin" "${level}@rainfall:/tmp/" || return
+}
+
+main() {
+    if (( $# == 0 )); then
+        printf -- 'Usage: %s <level...>\n' "${0##*/}" >&2
+        return 1
+    fi
+
+    command -V ssh scp sshpass make >/dev/null || return
+
+    for level in "$@"; do
+        build_level "${level}" || return
+    done
 }
 
 main "$@"
