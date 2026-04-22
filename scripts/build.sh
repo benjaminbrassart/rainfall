@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 main() {
+    command -V ssh scp sshpass make >/dev/null || return
+
     level="$1"
 
     case "${level}" in
@@ -12,6 +14,7 @@ main() {
         level[1-9])
             level_num="${level#level}"
             previous_level_num=$(( level_num - 1 ))
+
             sshpass_input_type='-f'
             sshpass_input="level${previous_level_num}/flag"
             ;;
@@ -24,6 +27,7 @@ main() {
         bonus[1-4])
             level_num="${level#bonus}"
             previous_level_num=$(( level_num - 1 ))
+
             sshpass_input_type='-f'
             sshpass_input="bonus${previous_level_num}/flag"
             ;;
