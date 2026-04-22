@@ -31,6 +31,7 @@ shellcode_end:
         .int saved_ebp          # p's stack frame ebp
         .int saved_eip          # p's stack frame eip
 
+        # stack alignment, any 8 bytes is fine
         .rept 8
         .byte 0x41
         .endr

@@ -1,3 +1,11 @@
+Basically the same as level1, except the return address is checked after `gets`.  It exits early if the return address matches `0xbXXXXXXX`.  This means we can't just return wherever we want.
+
+Our stack is mapped to `0xbffdf000-0xc0000000` (see gdb later), so we can't use that as return address.  libc is mapped to `0xb7e2c000-0xb7fd2000`, we can't use that either.
+
+Come to think of it, no mapped address range is viable except `0x08048000-0x0804a000` which is the program itself.  Since there's no ready-made win path in the program, there's nothing we can do.  At least, in this stack frame.
+
+If we can't change the return address of the current frame, why not change the parent stack frame?  Since the stack grows downwards, the previous stack frame starts and ends at a higher address than the current frame.  If we continue writing, we should be able to overwrite the return address of `main`.  We just need to be careful and not change the saved `ebp` and `eip` of `p`.
+
 Find `/bin/sh` in libc:
 
 ```
@@ -56,7 +64,7 @@ Payload:
     # saved ebp and saved eip from above
     perl -e 'print pack("L<" x 2, 0xbffffe58, 0x804854a)'
     
-    # dunno what's there, fill with dummy
+    # stack alignment
     perl -e 'print "A" x 8'
     
     # addresses of gets() stack buffer (saved ebp) and system() (saved eip)
