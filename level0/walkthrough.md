@@ -1,11 +1,5 @@
 # level0
 
-Setup SSH config for easier future access:
-
-```sh
-printf 'Host rainfall\n\tHostname 192.168.56.101\n\tPort 4242\n' | tee -a ~/.ssh/config
-```
-
 Pull the binary:
 
 ```sh
