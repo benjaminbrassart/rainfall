@@ -13,7 +13,7 @@ service 2
 0x804a008, 0x804a018
 ```
 
-The `service` buffer is 16 bytes after the `auth` buffer.  The win condition is `auth[32] != '\0'`, and `auth[32]` is basically `*(0x804a008 + 0x20)` or `*(0x804a028)`.  We can reach and write at this address by using the `service` buffer and the `service` command.  We just need to allocate the `auth` buffer and allocate a `service` buffer longer than 16 bytes.  To allocate the later, we need to type at least 27 characters since it calls `strdup(3)` at the 11th character of the read buffer (16 + 11 = 27).  Less characters will also work because of the metadata of the next chunk 
+The `service` buffer is 16 bytes after the `auth` buffer.  The win condition is `auth[32] != '\0'`, and `auth[32]` is basically `*(0x804a008 + 0x20)` or `*(0x804a028)`.  We can reach and write at this address by using the `service` buffer and the `service` command.  We just need to allocate the `auth` buffer and allocate a `service` buffer longer than 16 bytes.  To allocate the later, we need to type at least 27 characters since it calls `strdup(3)` at the 11th character of the read buffer (16 + 11 = 27).  Less characters might also work because of the metadata of the next chunk.
 
 ```
 (nil), (nil)
