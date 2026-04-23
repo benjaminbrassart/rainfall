@@ -7,8 +7,10 @@ void p(char *buffer, const char *separator)
 
 	puts(separator);
 	read(STDIN_FILENO, rbuf, 4096);
+
 	nl = strchr(rbuf, '\n');
 	*nl = '\0';
+
 	strncpy(buffer, rbuf, 20);
 }
 
