@@ -38,7 +38,7 @@ build_level() {
 
     make -C "${level}" || return
 
-    sshpass "${sshpass_input_type}" "${sshpass_input}" scp "${level}/payload.bin" "${level}@rainfall:/tmp/" || return
+    sshpass "${sshpass_input_type}" "${sshpass_input}" scp "${level}/payload.bin" "${level}@rainfall:/tmp/payload-${level}.bin" || return
 }
 
 main() {
