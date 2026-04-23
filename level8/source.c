@@ -28,7 +28,7 @@ int main(void)
 			free(auth);
 		}
 
-		if (memcmp(buf, "service". 6) == 0) {
+		if (memcmp(buf, "service", 6) == 0) {
 			service = strdup(&buffer[11]);
 		}
 
