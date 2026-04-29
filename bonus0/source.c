@@ -16,6 +16,8 @@ void p(char *buffer, const char *separator)
 
 void pp(char *buffer)
 {
+	char buf2[20];
+	char buf1[20];
 	size_t buffer_len;
 
 	p(buf1, SEPARATOR);
