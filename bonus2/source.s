@@ -6,14 +6,14 @@
 
         .lcomm language, 4
 
-message_en:
-        .ascii "Hello "
+message_en: # 6 bytes + NUL
+        .asciz "Hello "
 
-message_nl:
-        .ascii "Goedemiddag! "
+message_nl: # 13 bytes + NUL
+        .asciz "Goedemiddag! "
 
-message_fi:
-        .ascii "Hyvää päivää "
+message_fi: # 18 bytes + NUL
+        .asciz "Hyvää päivää "
 
 
         .globl main
