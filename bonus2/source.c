@@ -27,6 +27,7 @@ static void greetuser(void)
 {
 	char message[72];
 
+	// https://github.com/NationalSecurityAgency/ghidra/issues/2916
 	if (language == LANG_FI) {
 		*(unsigned int *)(message + 0) = *(unsigned int *)(MESSAGE_FI + 0);
 		*(unsigned int *)(message + 4) = *(unsigned int *)(MESSAGE_FI + 4);
