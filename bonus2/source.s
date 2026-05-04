@@ -92,8 +92,8 @@ greetuser:
         mov   byte ptr [eax + 6], dl
         jmp   .Lend
 
-.Lgreet_nl:
-        mov   edx, message_nl
+.Lgreet_fi:
+        mov   edx, message_fi
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
@@ -109,8 +109,8 @@ greetuser:
         movzx byte ptr [eax + 18], dl
         jmp   .Lend
 
-.Lgreet_fi:
-        mov   edx, message_fi
+.Lgreet_nl:
+        mov   edx, message_nl
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
