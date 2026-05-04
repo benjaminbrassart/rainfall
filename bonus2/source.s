@@ -7,7 +7,7 @@
         .lcomm language, 4
 
 message_en:
-        .ascii "Hxello "
+        .ascii "Hello "
 
 message_nl:
         .ascii "Goedemiddag! "
