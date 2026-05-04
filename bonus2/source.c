@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	memset(buffer, 0x00, 80);
 
 	strncpy(&buffer[0], argv[1], 40);
-	strncpy(&buffer[40], argv[1], 32);
+	strncpy(&buffer[40], argv[2], 32);
 
 	lang = getenv("LANG");
 	if (lang != NULL) {
