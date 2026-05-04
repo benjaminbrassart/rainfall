@@ -29,7 +29,7 @@ main:
         sub esp, 160
 
         # argc == 3
-        cmp dword ptr [ebp+8], 3
+        cmp dword ptr [ebp + 8], 3
         je  .L1
 
         mov eax, 1
@@ -97,16 +97,16 @@ greetuser:
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
-        mov   ecx, dword ptr [edx+4]
-        mov   dword ptr [eax+4], ecx
-        mov   ecx, dword ptr [edx+8]
-        mov   dword ptr [eax+8], ecx
-        mov   ecx, dword ptr [edx+12]
-        mov   dword ptr [eax+12], ecx
-        mov   ecx, word ptr [edx+16]
-        movzx word ptr [eax+16], cx
-        mov   edx, byte ptr [edx+18]
-        movzx byte ptr [eax+18], dl
+        mov   ecx, dword ptr [edx + 4]
+        mov   dword ptr [eax + 4], ecx
+        mov   ecx, dword ptr [edx + 8]
+        mov   dword ptr [eax + 8], ecx
+        mov   ecx, dword ptr [edx + 12]
+        mov   dword ptr [eax + 12], ecx
+        mov   ecx, word ptr [edx + 16]
+        movzx word ptr [eax + 16], cx
+        mov   edx, byte ptr [edx + 18]
+        movzx byte ptr [eax + 18], dl
         jmp   .Lend
 
 .Lgreet_fi:
@@ -114,10 +114,10 @@ greetuser:
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
-        mov   ecx, dword ptr [edx+4]
-        mov   dword ptr [eax+4], ecx
-        mov   ecx, dword ptr [edx+8]
-        mov   dword ptr [eax+8], ecx
+        mov   ecx, dword ptr [edx + 4]
+        mov   dword ptr [eax + 4], ecx
+        mov   ecx, dword ptr [edx + 8]
+        mov   dword ptr [eax + 8], ecx
         movzx edx, word ptr [edx + 12]
         mov   word ptr [eax + 12], dx
         nop
