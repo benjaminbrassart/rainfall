@@ -6,6 +6,14 @@
 
         .lcomm language, 4
 
+message_en:
+        .ascii "Hxello "
+
+message_nl:
+        .ascii "Goedemiddag! "
+
+message_fi:
+        .ascii "Hyvää päivää "
 
 
         .globl main
@@ -74,7 +82,7 @@ greetuser:
         jne  .Lend
 
 .Lgreet_en:
-        mov   edx, 0x8048710
+        mov   edx, message_en
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
@@ -85,7 +93,7 @@ greetuser:
         jmp   .Lend
 
 .Lgreet_nl:
-        mov   edx, 0x8048717
+        mov   edx, message_nl
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
@@ -102,7 +110,7 @@ greetuser:
         jmp   .Lend
 
 .Lgreet_fi:
-        mov   edx, 0x804872a
+        mov   edx, message_fi
         lea   eax, [ebp - 72]
         mov   ecx, dword ptr [edx]
         mov   dword ptr [eax], ecx
