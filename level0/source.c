@@ -11,7 +11,7 @@ int main(int argc, const char *argv[])
 	int password;
 	gid_t gid;
 	uid_t uid;
-	cchar *args[2];
+	char *args[2];
 
 	password = atoi(argv[1]);
 	if (password == 423) {
