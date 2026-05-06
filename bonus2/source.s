@@ -6,13 +6,13 @@
 
         .lcomm language, 4
 
-message_en: # 6 bytes + NUL
+message_en: // 6 bytes + NUL
         .asciz "Hello "
 
-message_nl: # 13 bytes + NUL
+message_nl: // 13 bytes + NUL
         .asciz "Goedemiddag! "
 
-message_fi: # 18 bytes + NUL
+message_fi: // 18 bytes + NUL
         .asciz "Hyvää päivää "
 
 
@@ -28,7 +28,7 @@ main:
         and esp, 0xfffffff0
         sub esp, 160
 
-        # argc == 3
+        // argc == 3
         cmp dword ptr [ebp + 8], 3
         je  .L1
 
@@ -36,14 +36,14 @@ main:
         jmp .Lret
 
 .L1:
-        # memset(stack[80], 0, 20)
+        // memset(stack[80], 0, 20)
         lea ebx, [esp+80]
         mov eax, 0
         mov edx, 19
         mov edi, edx
         rep stos dword ptr es:[edi], eax
 
-        # strncpy()
+        // strncpy()
         mov  eax, dword ptr [ebp + 12]
         add  eax, 4
         mov  eax, dword ptr [eax]
@@ -53,7 +53,7 @@ main:
         mov  dword ptr [esp] eax
         call strncpy
 
-        # XXX missing code
+        // XXX missing code
 
 .Lret:
         lea esp, [ebp + 12]
