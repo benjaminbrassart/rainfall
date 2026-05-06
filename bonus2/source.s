@@ -6,13 +6,16 @@
 
         .lcomm language, 4
 
-message_en: // 6 bytes + NUL
+// 6 bytes + NUL
+message_en:
         .asciz "Hello "
 
-message_nl: // 13 bytes + NUL
+// 13 bytes + NUL
+message_nl:
         .asciz "Goedemiddag! "
 
-message_fi: // 18 bytes + NUL
+// 18 bytes + NUL
+message_fi:
         .asciz "Hyvää päivää "
 
 
