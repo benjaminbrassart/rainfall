@@ -1,1 +1,4 @@
-RainFall.iso
+*.iso
+*.o
+*.bin
+*.objdump
