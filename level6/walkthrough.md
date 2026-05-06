@@ -21,15 +21,12 @@ gdb ./level6
 # break after each malloc
 b *main+21
 b *main+37
-
 r "hello world"
 p/x $eax
 # big = 0x804a008
-
 c
 p/x $eax
 # small = 0x804a050
-
 c
 ```
 
