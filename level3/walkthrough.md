@@ -116,3 +116,5 @@ We can grab the flag using:
 ```sh
 cat ~level4/.pass
 ```
+
+More on format string exploits: https://samsclass.info/127/proj/p6a-fs.htm

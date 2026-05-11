@@ -36,9 +36,10 @@ build_level() {
             ;;
     esac
 
-    make -C "${level}" || return
+    make_dir="${level}/resources"
+    make -C "${make_dir}" || return
 
-    sshpass "${sshpass_input_type}" "${sshpass_input}" scp "${level}/payload.bin" "${level}@rainfall:/tmp/payload-${level}.bin" || return
+    sshpass "${sshpass_input_type}" "${sshpass_input}" scp "${make_dir}/payload.bin" "${level}@rainfall:/tmp/payload-${level}.bin" || return
 }
 
 main() {
