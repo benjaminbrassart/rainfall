@@ -4,7 +4,7 @@ typedef int (weird_func_t)(N &, N &);
 
 struct N {
   weird_func_t *func;
-  unsigned char _pad[100];
+  char annotation[100];
   int value;
 
   N(int value)
@@ -25,7 +25,7 @@ struct N {
   {
     size_t len = strlen(s);
 
-    memcpy(this->_pad, s, len);
+    memcpy(this->annotation, s, len);
   }
 };
 
