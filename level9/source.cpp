@@ -9,7 +9,7 @@ struct N {
 
   N(int value)
   {
-    this->func = (weird_func_t *)_operator_plus;
+    this->func = (weird_func_t *)&N::operator+;
     this->value = value;
   }
 
