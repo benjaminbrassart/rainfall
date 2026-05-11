@@ -1,11 +1,4 @@
-#include <cstdlib>
-#include <cstring>
-
-
-extern "C" void _exit(int);
-
 struct N;
-extern "C" int _operator_plus(N &lhs, N &rhs);
 
 typedef int (weird_func_t)(N &, N &);
 
@@ -24,6 +17,10 @@ struct N {
     return this->value - rhs.value;
   }
 
+  int operator+(N &rhs) {
+    return this->value + rhs.value;
+  }
+
   void setAnnotation(char *s)
   {
     size_t len = strlen(s);
@@ -31,15 +28,6 @@ struct N {
     memcpy(this->_pad, s, len);
   }
 };
-
-__attribute__((alias("_operator_plus")))
-int operator+(N &lhs, N &rhs);
-
-// XXX symbol name not accurate
-extern "C" int _operator_plus(N &lhs, N &rhs)
-{
-  return lhs.value + rhs.value;
-}
 
 int main(int argc, char **argv)
 {
