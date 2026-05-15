@@ -46,7 +46,7 @@ Stack frame at 0xbffffe60:
 So saved `eip` is `0x804854a` and saved `ebp` is `0xbffffe58`.
 
 ```
-(gdb) b *p+
+(gdb) b *p+25
 Breakpoint 2 at 0x80484ea
 
 (gdb) c
